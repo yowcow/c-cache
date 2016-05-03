@@ -37,6 +37,10 @@ void append_cache_node(cache_node_t* n1, cache_node_t* n2) {
     n2->prev = n1;
 }
 
+void destroy_cache_node(cache_node_t* n) {
+    free(n);
+}
+
 void remove_cache_node(cache_node_t* n) {
     if (n->prev != NULL) {
         if (n->next != NULL) {
@@ -56,7 +60,7 @@ void remove_cache_node(cache_node_t* n) {
         }
     }
 
-    free(n);
+    destroy_cache_node(n);
 }
 
 // For testing purpose...
