@@ -18,7 +18,7 @@ $(BUILD)/cache-bucket-test:
 
 $(BUILD)/cache-hash-test:
 	@mkdir -p $(BUILD)
-	gcc $(OPT) cache-hash-test.c -o $(BUILD)/cache-hash-test
+	gcc $(OPT) -I murmurhash.c murmurhash.c/murmurhash.c cache-hash-test.c -o $(BUILD)/cache-hash-test
 
 clean:
 	-rm -rf $(BUILD)

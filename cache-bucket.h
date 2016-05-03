@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 #include "cache-node.h"
 
 typedef struct cache_bucket {
@@ -25,7 +26,7 @@ cache_bucket_t* create_cache_bucket() {
     return b;
 }
 
-cache_node_t* find_node_in_cache_bucket(cache_bucket_t* b, char* key) {
+cache_node_t* find_node_in_cache_bucket(cache_bucket_t* b, const char* key) {
     if (!b->size) {
         return NULL;
     }
@@ -41,28 +42,37 @@ cache_node_t* find_node_in_cache_bucket(cache_bucket_t* b, char* key) {
     return NULL;
 }
 
-void append_node_to_cache_bucket(cache_bucket_t* b, cache_node_t* n) {
+cache_node_t* append_node_to_cache_bucket(cache_bucket_t* b, const char* key, const char* value) {
     if (!b->size) {
+        cache_node_t* n = create_cache_node(key, value);
+
         b->head = n;
         b->tail = n;
         b->size += 1;
+
+        return n;
     }
     else {
-        cache_node_t* dupe_n = find_node_in_cache_bucket(b, n->key);
+        cache_node_t* dupe_n = find_node_in_cache_bucket(b, key);
 
         if (dupe_n != NULL) {
-            dupe_n->value = n->value;
-            destroy_cache_node(n); // Key is dupe and dumping
+            dupe_n->value = value;
+
+            return dupe_n;
         }
         else {
+            cache_node_t* n = create_cache_node(key, value);
+
             append_cache_node(b->tail, n);
             b->tail = n;
             b->size += 1;
+
+            return n;
         }
     }
 }
 
-bool remove_node_in_cache_bucket(cache_bucket_t* b, char* key) {
+bool remove_node_in_cache_bucket(cache_bucket_t* b, const char* key) {
     cache_node_t* n = find_node_in_cache_bucket(b, key);
 
     if (n == NULL) {

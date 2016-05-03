@@ -21,50 +21,48 @@ void test_append_node_to_cache_bucket() {
     printf("Testing %s...", __func__);
 
     cache_bucket_t* b = create_cache_bucket();
-    cache_node_t* n1 = create_cache_node("key1", "value1");
-    cache_node_t* n2 = create_cache_node("key2", "value2");
-    cache_node_t* n3 = create_cache_node("key3", "value3");
 
     {
-        append_node_to_cache_bucket(b, n1);
+        cache_node_t* n = append_node_to_cache_bucket(b, "key1", "value1");
 
         assert(b->size == 1);
         assert(strcmp(b->head->key, "key1") == 0);
         assert(strcmp(b->tail->key, "key1") == 0);
+        assert(strcmp(n->key, b->tail->key) == 0);
     }
 
     {
-        append_node_to_cache_bucket(b, n2);
+        cache_node_t* n = append_node_to_cache_bucket(b, "key2", "value2");
 
         assert(b->size == 2);
         assert(strcmp(b->head->key, "key1") == 0);
         assert(strcmp(b->head->next->key, "key2") == 0);
         assert(strcmp(b->tail->key, "key2") == 0);
         assert(strcmp(b->tail->prev->key, "key1") == 0);
+        assert(strcmp(n->key, b->tail->key) == 0);
     }
 
     {
-        append_node_to_cache_bucket(b, n3);
+        cache_node_t* n = append_node_to_cache_bucket(b, "key3", "value3");
 
         assert(b->size == 3);
         assert(strcmp(b->head->key, "key1") == 0);
         assert(strcmp(b->head->next->key, "key2") == 0);
         assert(strcmp(b->tail->key, "key3") == 0);
         assert(strcmp(b->tail->prev->key, "key2") == 0);
+        assert(strcmp(n->key, b->tail->key) == 0);
     }
 
     {
-        cache_node_t* n3_2 = create_cache_node("key3", "value333");
-        append_node_to_cache_bucket(b, n3_2);
+        cache_node_t* n = append_node_to_cache_bucket(b, "key3", "value333");
 
         assert(b->size == 3);
+        assert(strcmp(b->tail->key, "key3") == 0);
         assert(strcmp(b->tail->value, "value333") == 0); // Overwritten
+        assert(strcmp(n->value, b->tail->value) == 0);
     }
 
-    free(n1);
-    free(n2);
-    free(n3);
-    free(b);
+    destroy_cache_bucket(b);
 
     printf("Done\n");
 }
@@ -80,13 +78,9 @@ void test_find_node_in_cache_bucket() {
         assert(n == NULL);
     }
 
-    cache_node_t* n1 = create_cache_node("key1", "value1");
-    cache_node_t* n2 = create_cache_node("key2", "value2");
-    cache_node_t* n3 = create_cache_node("key3", "value3");
-
-    append_node_to_cache_bucket(b, n1);
-    append_node_to_cache_bucket(b, n2);
-    append_node_to_cache_bucket(b, n3);
+    append_node_to_cache_bucket(b, "key1", "value1");
+    append_node_to_cache_bucket(b, "key2", "value2");
+    append_node_to_cache_bucket(b, "key3", "value3");
 
     {
         cache_node_t* n = find_node_in_cache_bucket(b, "key3");
@@ -100,10 +94,7 @@ void test_find_node_in_cache_bucket() {
         assert(n == NULL);
     }
 
-    free(n1);
-    free(n2);
-    free(n3);
-    free(b);
+    destroy_cache_bucket(b);
 
     printf("Done\n");
 }
@@ -117,16 +108,11 @@ void test_remove_node_in_cache_bucket() {
         assert(remove_node_in_cache_bucket(b, "hoge") == false);
     }
 
-    cache_node_t* n1 = create_cache_node("n1", "value1");
-    cache_node_t* n2 = create_cache_node("n2", "value2");
-    cache_node_t* n3 = create_cache_node("n3", "value3");
-    cache_node_t* n4 = create_cache_node("n4", "value4");
-
     // Form a list: n1 -> n2 -> n3 -> n4
-    append_node_to_cache_bucket(b, n1);
-    append_node_to_cache_bucket(b, n2);
-    append_node_to_cache_bucket(b, n3);
-    append_node_to_cache_bucket(b, n4);
+    append_node_to_cache_bucket(b, "n1", "value1");
+    append_node_to_cache_bucket(b, "n2", "value2");
+    append_node_to_cache_bucket(b, "n3", "value3");
+    append_node_to_cache_bucket(b, "n4", "value4");
 
     {
         // Make it: n1 -> n2 -> n4
@@ -170,15 +156,10 @@ void test_destroy_cache_bucket() {
 
     cache_bucket_t* b = create_cache_bucket();
 
-    cache_node_t* n1 = create_cache_node("n1", "value1");
-    cache_node_t* n2 = create_cache_node("n2", "value2");
-    cache_node_t* n3 = create_cache_node("n3", "value3");
-    cache_node_t* n4 = create_cache_node("n4", "value4");
-
-    append_node_to_cache_bucket(b, n1);
-    append_node_to_cache_bucket(b, n2);
-    append_node_to_cache_bucket(b, n3);
-    append_node_to_cache_bucket(b, n4);
+    append_node_to_cache_bucket(b, "n1", "value1");
+    append_node_to_cache_bucket(b, "n2", "value2");
+    append_node_to_cache_bucket(b, "n3", "value3");
+    append_node_to_cache_bucket(b, "n4", "value4");
 
     destroy_cache_bucket(b);
 

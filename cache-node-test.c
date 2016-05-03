@@ -35,7 +35,7 @@ void test_append_cache_node() {
 
 
     {
-        char* keys[3];
+        const char* keys[3];
         get_cache_node_keys(n1, keys);
 
         assert(strcmp(keys[0], "key1") == 0);
@@ -44,7 +44,7 @@ void test_append_cache_node() {
     }
 
     {
-        char* keys[3];
+        const char* keys[3];
         get_cache_node_keys_reverse(n3, keys);
 
         assert(strcmp(keys[2], "key1") == 0);
@@ -76,7 +76,7 @@ void test_remove_cache_node() {
     remove_cache_node(n2);
 
     {
-        char* keys[3];
+        const char* keys[3];
         get_cache_node_keys(n1, keys);
 
         assert(strcmp(keys[0], "key1") == 0);
@@ -85,7 +85,7 @@ void test_remove_cache_node() {
     }
 
     {
-        char* keys[4];
+        const char* keys[4];
         get_cache_node_keys_reverse(n4, keys);
 
         assert(strcmp(keys[0], "key4") == 0);
@@ -97,7 +97,7 @@ void test_remove_cache_node() {
     remove_cache_node(n1);
 
     {
-        char* keys[2];
+        const char* keys[2];
         get_cache_node_keys(n3, keys);
 
         assert(strcmp(keys[0], "key3") == 0);
@@ -105,7 +105,7 @@ void test_remove_cache_node() {
     }
 
     {
-        char* keys[2];
+        const char* keys[2];
         get_cache_node_keys_reverse(n4, keys);
 
         assert(strcmp(keys[0], "key4") == 0);
@@ -116,14 +116,14 @@ void test_remove_cache_node() {
     remove_cache_node(n4);
 
     {
-        char* keys[1];
+        const char* keys[1];
         get_cache_node_keys(n3, keys);
 
         assert(strcmp(keys[0], "key3") == 0);
     }
 
     {
-        char* keys[1];
+        const char* keys[1];
         get_cache_node_keys_reverse(n3, keys);
 
         assert(strcmp(keys[0], "key3") == 0);
