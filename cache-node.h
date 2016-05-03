@@ -9,13 +9,13 @@ extern "C" {
 #include <stdint.h>
 
 typedef struct cache_node {
-    char* key;
-    char* value;
+    const char* key;
+    const char* value;
     struct cache_node* next;
     struct cache_node* prev;
 } cache_node_t;
 
-cache_node_t* create_cache_node(char* key, char* value) {
+cache_node_t* create_cache_node(const char* key, const char* value) {
     cache_node_t* n = malloc(sizeof(cache_node_t));
 
     n->key   = key;
@@ -37,6 +37,10 @@ void append_cache_node(cache_node_t* n1, cache_node_t* n2) {
     n2->prev = n1;
 }
 
+void destroy_cache_node(cache_node_t* n) {
+    free(n);
+}
+
 void remove_cache_node(cache_node_t* n) {
     if (n->prev != NULL) {
         if (n->next != NULL) {
@@ -56,11 +60,11 @@ void remove_cache_node(cache_node_t* n) {
         }
     }
 
-    free(n);
+    destroy_cache_node(n);
 }
 
 // For testing purpose...
-void get_cache_node_keys(cache_node_t* n, char** keys) {
+void get_cache_node_keys(cache_node_t* n, const char** keys) {
     uint32_t i = 0;
     cache_node_t* tmp_n = n;
 
@@ -71,7 +75,7 @@ void get_cache_node_keys(cache_node_t* n, char** keys) {
 }
 
 // For testing purpose...
-void get_cache_node_keys_reverse(cache_node_t* n, char** keys) {
+void get_cache_node_keys_reverse(cache_node_t* n, const char** keys) {
     uint32_t i = 0;
     cache_node_t* tmp_n = n;
 
