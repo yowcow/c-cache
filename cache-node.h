@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 
 typedef struct cache_node {
     const char* key;
