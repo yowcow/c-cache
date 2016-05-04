@@ -32,7 +32,7 @@ void test_set_cache_hash() {
     // Overwrite seed for testing
     h->seed = 12345678;
 
-    cache_node_t* n = set_cache_hash(h, "key1", 4, "value1");
+    cache_node_t* n = set_cache_hash(h, "key1", "value1");
 
     uint32_t slot = cache_bucket_slot("key1", 4, h->seed);
 
@@ -55,11 +55,11 @@ void test_get_cache_hash() {
     // Overwrite seed for testing
     h->seed = 12345678;
 
-    set_cache_hash(h, "key1", 4, "value1");
-    set_cache_hash(h, "key2", 4, "value2");
-    set_cache_hash(h, "key3", 4, "value3");
-    set_cache_hash(h, "key4", 4, "value4");
-    set_cache_hash(h, "key5", 4, "value5");
+    set_cache_hash(h, "key1", "value1");
+    set_cache_hash(h, "key2", "value2");
+    set_cache_hash(h, "key3", "value3");
+    set_cache_hash(h, "key4", "value4");
+    set_cache_hash(h, "key5", "value5");
 
     for (uint32_t i = 1; i <= 5; i++) {
         char key[5];
@@ -67,7 +67,7 @@ void test_get_cache_hash() {
         sprintf(key, "key%d", i);
         sprintf(val, "value%d", i);
 
-        cache_node_t* n = get_cache_hash(h, key, 4);
+        cache_node_t* n = get_cache_hash(h, key);
 
         assert(strcmp(n->value, val) == 0);
     }
@@ -82,12 +82,12 @@ void test_delete_cache_hash() {
 
     cache_hash_t* h = create_cache_hash();
 
-    set_cache_hash(h, "key1", 4, "value4");
+    set_cache_hash(h, "key1", "value4");
 
-    assert(delete_cache_hash(h, "key1", 4) == true);
-    assert(delete_cache_hash(h, "key1", 4) == false);
+    assert(delete_cache_hash(h, "key1") == true);
+    assert(delete_cache_hash(h, "key1") == false);
 
-    cache_node_t* n = get_cache_hash(h, "key1", 4);
+    cache_node_t* n = get_cache_hash(h, "key1");
 
     assert(n == NULL);
 

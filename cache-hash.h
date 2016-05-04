@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 #include "cache-bucket.h"
 #include "murmurhash.h"
 
@@ -42,19 +43,22 @@ uint32_t cache_bucket_slot(const char* key, uint32_t len, uint32_t seed) {
     return murmurhash(key, len, seed) % CACHE_BUCKET_COUNT;
 }
 
-cache_node_t* set_cache_hash(cache_hash_t* h, const char* key, uint32_t len, const char* value) {
+cache_node_t* set_cache_hash(cache_hash_t* h, const char* key, const char* value) {
+    uint32_t len = strlen(key);
     uint32_t slot = cache_bucket_slot(key, len, h->seed);
 
     return append_node_to_cache_bucket(h->buckets[slot], key, value);
 }
 
-cache_node_t* get_cache_hash(cache_hash_t* h, const char* key, uint32_t len) {
+cache_node_t* get_cache_hash(cache_hash_t* h, const char* key) {
+    uint32_t len = strlen(key);
     uint32_t slot = cache_bucket_slot(key, len, h->seed);
 
     return find_node_in_cache_bucket(h->buckets[slot], key);
 }
 
-bool delete_cache_hash(cache_hash_t* h, const char* key, uint32_t len) {
+bool delete_cache_hash(cache_hash_t* h, const char* key) {
+    uint32_t len = strlen(key);
     uint32_t slot = cache_bucket_slot(key, len, h->seed);
 
     return remove_node_in_cache_bucket(h->buckets[slot], key);
