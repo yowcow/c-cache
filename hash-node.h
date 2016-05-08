@@ -8,21 +8,24 @@ extern "C" {
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef struct _hash_node {
-    const char* key;
-    const char* value;
+    char* key;
+    char* val;
     struct _hash_node* next;
     struct _hash_node* prev;
 } HashNode;
 
-HashNode* HashNode_create(const char* key, const char* value) {
+HashNode* HashNode_create(char* key, char* val) {
     HashNode* n = malloc(sizeof(HashNode));
+    n->key = malloc(sizeof(char) * (strlen(key) + 1));
+    n->val = malloc(sizeof(char) * (strlen(val) + 1));
 
-    n->key   = key;
-    n->value = value;
-    n->next  = NULL;
-    n->prev  = NULL;
+    strcpy(n->key, key);
+    strcpy(n->val, val);
+    n->next = NULL;
+    n->prev = NULL;
 
     return n;
 }
@@ -38,7 +41,15 @@ void HashNode_append(HashNode* n1, HashNode* n2) {
     n2->prev = n1;
 }
 
+void HashNode_update(HashNode* n, char* val) {
+    free(n->val);
+    n->val = malloc(sizeof(char) * (strlen(val) + 1));
+    strcpy(n->val, val);
+}
+
 void HashNode_destroy(HashNode* n) {
+    free(n->key);
+    free(n->val);
     free(n);
 }
 
@@ -65,7 +76,7 @@ void HashNode_remove(HashNode* n) {
 }
 
 // For testing purpose...
-void HashNode_get_keys(HashNode* n, const char** keys) {
+void HashNode_get_keys(HashNode* n, char** keys) {
     uint32_t i = 0;
     HashNode* tmp_n = n;
 
@@ -76,7 +87,7 @@ void HashNode_get_keys(HashNode* n, const char** keys) {
 }
 
 // For testing purpose...
-void HashNode_get_keys_reverse(HashNode* n, const char** keys) {
+void HashNode_get_keys_reverse(HashNode* n, char** keys) {
     uint32_t i = 0;
     HashNode* tmp_n = n;
 

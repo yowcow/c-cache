@@ -26,7 +26,7 @@ HashBucket* HashBucket_create() {
     return b;
 }
 
-HashNode* HashBucket_find_node(HashBucket* b, const char* key) {
+HashNode* HashBucket_find_node(HashBucket* b, char* key) {
     if (!b->size) {
         return NULL;
     }
@@ -43,9 +43,9 @@ HashNode* HashBucket_find_node(HashBucket* b, const char* key) {
     return NULL;
 }
 
-HashNode* HashBucket_append_node(HashBucket* b, const char* key, const char* value) {
+HashNode* HashBucket_append_node(HashBucket* b, char* key, char* val) {
     if (!b->size) {
-        HashNode* n = HashNode_create(key, value);
+        HashNode* n = HashNode_create(key, val);
 
         b->head = n;
         b->tail = n;
@@ -57,12 +57,12 @@ HashNode* HashBucket_append_node(HashBucket* b, const char* key, const char* val
         HashNode* dupe_n = HashBucket_find_node(b, key);
 
         if (dupe_n != NULL) {
-            dupe_n->value = value;
+            HashNode_update(dupe_n, val);
 
             return dupe_n;
         }
         else {
-            HashNode* n = HashNode_create(key, value);
+            HashNode* n = HashNode_create(key, val);
 
             HashNode_append(b->tail, n);
             b->tail = n;
@@ -73,7 +73,7 @@ HashNode* HashBucket_append_node(HashBucket* b, const char* key, const char* val
     }
 }
 
-bool HashBucket_remove_node(HashBucket* b, const char* key) {
+bool HashBucket_remove_node(HashBucket* b, char* key) {
     HashNode* n = HashBucket_find_node(b, key);
 
     if (n == NULL) {

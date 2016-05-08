@@ -58,8 +58,8 @@ void test_append_node_to_hash_bucket() {
 
         assert(b->size == 3);
         assert(strcmp(b->tail->key, "key3") == 0);
-        assert(strcmp(b->tail->value, "value333") == 0); // Overwritten
-        assert(strcmp(n->value, b->tail->value) == 0);
+        assert(strcmp(b->tail->val, "value333") == 0); // Overwritten
+        assert(strcmp(n->val, b->tail->val) == 0);
     }
 
     HashBucket_destroy(b);

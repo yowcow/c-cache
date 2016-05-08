@@ -39,25 +39,25 @@ void Hash_destroy(Hash* h) {
     free(h);
 }
 
-uint32_t Hash_find_bucket_slot(const char* key, uint32_t len, uint32_t seed) {
+uint32_t Hash_find_bucket_slot(char* key, uint32_t len, uint32_t seed) {
     return murmurhash(key, len, seed) % HASH_BUCKET_COUNT;
 }
 
-HashNode* Hash_set(Hash* h, const char* key, const char* value) {
+HashNode* Hash_set(Hash* h, char* key, char* val) {
     uint32_t len = strlen(key);
     uint32_t slot = Hash_find_bucket_slot(key, len, h->seed);
 
-    return HashBucket_append_node(h->buckets[slot], key, value);
+    return HashBucket_append_node(h->buckets[slot], key, val);
 }
 
-HashNode* Hash_get(Hash* h, const char* key) {
+HashNode* Hash_get(Hash* h, char* key) {
     uint32_t len = strlen(key);
     uint32_t slot = Hash_find_bucket_slot(key, len, h->seed);
 
     return HashBucket_find_node(h->buckets[slot], key);
 }
 
-bool Hash_delete(Hash* h, const char* key) {
+bool Hash_delete(Hash* h, char* key) {
     uint32_t len = strlen(key);
     uint32_t slot = Hash_find_bucket_slot(key, len, h->seed);
 

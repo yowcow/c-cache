@@ -18,7 +18,7 @@ $(BUILD):
 $(RESOURCES):
 	mkdir -p $(RESOURCES)
 
-test: $(BUILD)/hash-node-test $(BUILD)/hash-bucket-test $(BUILD)/hash-test
+test: all $(BUILD)/hash-node-test $(BUILD)/hash-bucket-test $(BUILD)/hash-test
 	./$(BUILD)/hash-node-test
 	./$(BUILD)/hash-bucket-test
 	./$(BUILD)/hash-test

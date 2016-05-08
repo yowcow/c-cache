@@ -9,9 +9,23 @@ void test_create_hash_node() {
     HashNode* n = HashNode_create("key", "value");
 
     assert(strcmp(n->key, "key") == 0);
-    assert(strcmp(n->value, "value") == 0);
+    assert(strcmp(n->val, "value") == 0);
 
-    free(n);
+    HashNode_destroy(n);
+
+    printf("OK\n");
+}
+
+void test_update_hash_node() {
+    printf("Working on %s...", __func__);
+
+    HashNode* n = HashNode_create("key", "value");
+
+    HashNode_update(n, "value123");
+
+    assert(strcmp(n->val, "value123") == 0);
+
+    HashNode_destroy(n);
 
     printf("OK\n");
 }
@@ -35,7 +49,7 @@ void test_append_hash_node() {
 
 
     {
-        const char* keys[3];
+        char* keys[3];
         HashNode_get_keys(n1, keys);
 
         assert(strcmp(keys[0], "key1") == 0);
@@ -44,7 +58,7 @@ void test_append_hash_node() {
     }
 
     {
-        const char* keys[3];
+        char* keys[3];
         HashNode_get_keys_reverse(n3, keys);
 
         assert(strcmp(keys[2], "key1") == 0);
@@ -52,9 +66,9 @@ void test_append_hash_node() {
         assert(strcmp(keys[0], "key3") == 0);
     }
 
-    free(n1);
-    free(n2);
-    free(n3);
+    HashNode_destroy(n1);
+    HashNode_destroy(n2);
+    HashNode_destroy(n3);
 
     printf("OK\n");
 }
@@ -76,7 +90,7 @@ void test_remove_hash_node() {
     HashNode_remove(n2);
 
     {
-        const char* keys[3];
+        char* keys[3];
         HashNode_get_keys(n1, keys);
 
         assert(strcmp(keys[0], "key1") == 0);
@@ -85,7 +99,7 @@ void test_remove_hash_node() {
     }
 
     {
-        const char* keys[4];
+        char* keys[4];
         HashNode_get_keys_reverse(n4, keys);
 
         assert(strcmp(keys[0], "key4") == 0);
@@ -97,7 +111,7 @@ void test_remove_hash_node() {
     HashNode_remove(n1);
 
     {
-        const char* keys[2];
+        char* keys[2];
         HashNode_get_keys(n3, keys);
 
         assert(strcmp(keys[0], "key3") == 0);
@@ -105,7 +119,7 @@ void test_remove_hash_node() {
     }
 
     {
-        const char* keys[2];
+        char* keys[2];
         HashNode_get_keys_reverse(n4, keys);
 
         assert(strcmp(keys[0], "key4") == 0);
@@ -116,14 +130,14 @@ void test_remove_hash_node() {
     HashNode_remove(n4);
 
     {
-        const char* keys[1];
+        char* keys[1];
         HashNode_get_keys(n3, keys);
 
         assert(strcmp(keys[0], "key3") == 0);
     }
 
     {
-        const char* keys[1];
+        char* keys[1];
         HashNode_get_keys_reverse(n3, keys);
 
         assert(strcmp(keys[0], "key3") == 0);
@@ -136,6 +150,7 @@ void test_remove_hash_node() {
 
 int main() {
     test_create_hash_node();
+    test_update_hash_node();
     test_append_hash_node();
     test_remove_hash_node();
 }
