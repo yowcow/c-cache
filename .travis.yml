@@ -4,5 +4,9 @@ compiler:
   - clang
   - gcc
 
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install valgrind
+
 script:
-  - make && make test
+  - make && make test-valgrind

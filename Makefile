@@ -23,6 +23,11 @@ test: all $(BUILD)/hash-node-test $(BUILD)/hash-bucket-test $(BUILD)/hash-test
 	./$(BUILD)/hash-bucket-test
 	./$(BUILD)/hash-test
 
+test-valgrind: all $(BUILD)/hash-node-test $(BUILD)/hash-bucket-test $(BUILD)/hash-test
+	valgrind ./$(BUILD)/hash-node-test
+	valgrind ./$(BUILD)/hash-bucket-test
+	valgrind ./$(BUILD)/hash-test
+
 $(BUILD)/hash-node-test:
 	$(CC) $(OPT) hash-node-test.c -o $(BUILD)/hash-node-test
 
