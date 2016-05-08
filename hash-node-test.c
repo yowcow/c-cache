@@ -1,12 +1,12 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#include "cache-node.h"
+#include "hash-node.h"
 
-void test_create_cache_node() {
+void test_create_hash_node() {
     printf("Working on %s...", __func__);
 
-    cache_node_t* n = create_cache_node("key", "value");
+    HashNode* n = HashNode_create("key", "value");
 
     assert(strcmp(n->key, "key") == 0);
     assert(strcmp(n->value, "value") == 0);
@@ -16,15 +16,15 @@ void test_create_cache_node() {
     printf("OK\n");
 }
 
-void test_append_cache_node() {
+void test_append_hash_node() {
     printf("Working on %s...", __func__);
 
-    cache_node_t* n1 = create_cache_node("key1", "value1");
-    cache_node_t* n2 = create_cache_node("key2", "value2");
-    cache_node_t* n3 = create_cache_node("key3", "value3");
+    HashNode* n1 = HashNode_create("key1", "value1");
+    HashNode* n2 = HashNode_create("key2", "value2");
+    HashNode* n3 = HashNode_create("key3", "value3");
 
-    append_cache_node(n1, n2);
-    append_cache_node(n2, n3);
+    HashNode_append(n1, n2);
+    HashNode_append(n2, n3);
 
     assert(n1->prev == NULL);
     assert(strcmp(n1->next->key, n2->key) == 0);
@@ -36,7 +36,7 @@ void test_append_cache_node() {
 
     {
         const char* keys[3];
-        get_cache_node_keys(n1, keys);
+        HashNode_get_keys(n1, keys);
 
         assert(strcmp(keys[0], "key1") == 0);
         assert(strcmp(keys[1], "key2") == 0);
@@ -45,7 +45,7 @@ void test_append_cache_node() {
 
     {
         const char* keys[3];
-        get_cache_node_keys_reverse(n3, keys);
+        HashNode_get_keys_reverse(n3, keys);
 
         assert(strcmp(keys[2], "key1") == 0);
         assert(strcmp(keys[1], "key2") == 0);
@@ -59,25 +59,25 @@ void test_append_cache_node() {
     printf("OK\n");
 }
 
-void test_remove_cache_node() {
+void test_remove_hash_node() {
     printf("Working on %s...", __func__);
 
-    cache_node_t* n1 = create_cache_node("key1", "value1");
-    cache_node_t* n2 = create_cache_node("key2", "value2");
-    cache_node_t* n3 = create_cache_node("key3", "value3");
-    cache_node_t* n4 = create_cache_node("key4", "value4");
+    HashNode* n1 = HashNode_create("key1", "value1");
+    HashNode* n2 = HashNode_create("key2", "value2");
+    HashNode* n3 = HashNode_create("key3", "value3");
+    HashNode* n4 = HashNode_create("key4", "value4");
 
     // Form a list: n1 <-> n2 <-> n3 <-> n4
-    append_cache_node(n1, n2);
-    append_cache_node(n2, n3);
-    append_cache_node(n3, n4);
+    HashNode_append(n1, n2);
+    HashNode_append(n2, n3);
+    HashNode_append(n3, n4);
 
     // Make it: n1 <-> n3 <-> n4
-    remove_cache_node(n2);
+    HashNode_remove(n2);
 
     {
         const char* keys[3];
-        get_cache_node_keys(n1, keys);
+        HashNode_get_keys(n1, keys);
 
         assert(strcmp(keys[0], "key1") == 0);
         assert(strcmp(keys[1], "key3") == 0);
@@ -86,7 +86,7 @@ void test_remove_cache_node() {
 
     {
         const char* keys[4];
-        get_cache_node_keys_reverse(n4, keys);
+        HashNode_get_keys_reverse(n4, keys);
 
         assert(strcmp(keys[0], "key4") == 0);
         assert(strcmp(keys[1], "key3") == 0);
@@ -94,11 +94,11 @@ void test_remove_cache_node() {
     }
 
     // Make it: n3 <-> n4
-    remove_cache_node(n1);
+    HashNode_remove(n1);
 
     {
         const char* keys[2];
-        get_cache_node_keys(n3, keys);
+        HashNode_get_keys(n3, keys);
 
         assert(strcmp(keys[0], "key3") == 0);
         assert(strcmp(keys[1], "key4") == 0);
@@ -106,36 +106,36 @@ void test_remove_cache_node() {
 
     {
         const char* keys[2];
-        get_cache_node_keys_reverse(n4, keys);
+        HashNode_get_keys_reverse(n4, keys);
 
         assert(strcmp(keys[0], "key4") == 0);
         assert(strcmp(keys[1], "key3") == 0);
     }
 
     // Make it: n3
-    remove_cache_node(n4);
+    HashNode_remove(n4);
 
     {
         const char* keys[1];
-        get_cache_node_keys(n3, keys);
+        HashNode_get_keys(n3, keys);
 
         assert(strcmp(keys[0], "key3") == 0);
     }
 
     {
         const char* keys[1];
-        get_cache_node_keys_reverse(n3, keys);
+        HashNode_get_keys_reverse(n3, keys);
 
         assert(strcmp(keys[0], "key3") == 0);
     }
 
-    remove_cache_node(n3);
+    HashNode_remove(n3);
 
     printf("OK\n");
 }
 
 int main() {
-    test_create_cache_node();
-    test_append_cache_node();
-    test_remove_cache_node();
+    test_create_hash_node();
+    test_append_hash_node();
+    test_remove_hash_node();
 }

@@ -1,5 +1,5 @@
-#ifndef CACHE_BUCKET_H_
-#define CACHE_BUCKET_H_
+#ifndef HASH_BUCKET_H_
+#define HASH_BUCKET_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -8,16 +8,16 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include "cache-node.h"
+#include "hash-node.h"
 
-typedef struct cache_bucket {
+typedef struct _hash_bucket {
     uint32_t size;
-    cache_node_t* head;
-    cache_node_t* tail;
-} cache_bucket_t;
+    HashNode* head;
+    HashNode* tail;
+} HashBucket;
 
-cache_bucket_t* create_cache_bucket() {
-    cache_bucket_t* b = malloc(sizeof(cache_bucket_t));
+HashBucket* HashBucket_create() {
+    HashBucket* b = malloc(sizeof(HashBucket));
 
     b->size = 0;
     b->head = NULL;
@@ -26,12 +26,13 @@ cache_bucket_t* create_cache_bucket() {
     return b;
 }
 
-cache_node_t* find_node_in_cache_bucket(cache_bucket_t* b, const char* key) {
+HashNode* HashBucket_find_node(HashBucket* b, const char* key) {
     if (!b->size) {
         return NULL;
     }
 
-    cache_node_t* tmp_n = b->head;
+    HashNode* tmp_n = b->head;
+
     do {
         if (strcmp(tmp_n->key, key) == 0) {
             return tmp_n;
@@ -42,9 +43,9 @@ cache_node_t* find_node_in_cache_bucket(cache_bucket_t* b, const char* key) {
     return NULL;
 }
 
-cache_node_t* append_node_to_cache_bucket(cache_bucket_t* b, const char* key, const char* value) {
+HashNode* HashBucket_append_node(HashBucket* b, const char* key, const char* value) {
     if (!b->size) {
-        cache_node_t* n = create_cache_node(key, value);
+        HashNode* n = HashNode_create(key, value);
 
         b->head = n;
         b->tail = n;
@@ -53,7 +54,7 @@ cache_node_t* append_node_to_cache_bucket(cache_bucket_t* b, const char* key, co
         return n;
     }
     else {
-        cache_node_t* dupe_n = find_node_in_cache_bucket(b, key);
+        HashNode* dupe_n = HashBucket_find_node(b, key);
 
         if (dupe_n != NULL) {
             dupe_n->value = value;
@@ -61,9 +62,9 @@ cache_node_t* append_node_to_cache_bucket(cache_bucket_t* b, const char* key, co
             return dupe_n;
         }
         else {
-            cache_node_t* n = create_cache_node(key, value);
+            HashNode* n = HashNode_create(key, value);
 
-            append_cache_node(b->tail, n);
+            HashNode_append(b->tail, n);
             b->tail = n;
             b->size += 1;
 
@@ -72,8 +73,8 @@ cache_node_t* append_node_to_cache_bucket(cache_bucket_t* b, const char* key, co
     }
 }
 
-bool remove_node_in_cache_bucket(cache_bucket_t* b, const char* key) {
-    cache_node_t* n = find_node_in_cache_bucket(b, key);
+bool HashBucket_remove_node(HashBucket* b, const char* key) {
+    HashNode* n = HashBucket_find_node(b, key);
 
     if (n == NULL) {
         return false;
@@ -91,19 +92,19 @@ bool remove_node_in_cache_bucket(cache_bucket_t* b, const char* key) {
 
     b->size--;
 
-    remove_cache_node(n);
+    HashNode_remove(n);
 
     return true;
 }
 
-void destroy_cache_bucket(cache_bucket_t* b) {
+void HashBucket_destroy(HashBucket* b) {
     if (b->size) {
-        cache_node_t* tmp_n = b->head;
-        cache_node_t* nxt_n = NULL;
+        HashNode* tmp_n = b->head;
+        HashNode* nxt_n = NULL;
 
         do {
             nxt_n = tmp_n->next;
-            destroy_cache_node(tmp_n);
+            HashNode_destroy(tmp_n);
             tmp_n = nxt_n;
         } while(tmp_n != NULL);
     }
