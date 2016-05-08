@@ -12,7 +12,7 @@ void test_create_hash_bucket() {
     assert(b->head == NULL);
     assert(b->tail == NULL);
 
-    free(b);
+    HashBucket_destroy(b);
 
     printf("Done\n");
 }
@@ -146,7 +146,7 @@ void test_remove_node_in_hash_bucket() {
         assert(b->tail == NULL);
     }
 
-    free(b);
+    HashBucket_destroy(b);
 
     printf("Done\n");
 }

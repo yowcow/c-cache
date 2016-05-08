@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "hash.h"
 
@@ -15,11 +16,9 @@ void test_Hash_create() {
         assert(h->buckets[i]->size == 0);
         assert(h->buckets[i]->head == NULL);
         assert(h->buckets[i]->tail == NULL);
-
-        HashBucket_destroy(h->buckets[i]);
     }
 
-    free(h);
+   Hash_destroy(h);
 
     printf("Done\n");
 }

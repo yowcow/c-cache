@@ -62,4 +62,8 @@ class C_Hash::Hash is repr('CStruct') {
     method free(::?CLASS:D:) {
         destroy(self);
     }
+
+    method DESTROY(::?CLASS:D:) {
+        self.free;
+    }
 }
