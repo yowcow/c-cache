@@ -1,5 +1,5 @@
-#ifndef CACHE_NODE_H_
-#define CACHE_NODE_H_
+#ifndef HASH_NODE_H_
+#define HASH_NODE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -8,26 +8,29 @@ extern "C" {
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
-typedef struct cache_node {
-    const char* key;
-    const char* value;
-    struct cache_node* next;
-    struct cache_node* prev;
-} cache_node_t;
+typedef struct _hash_node {
+    char* key;
+    char* val;
+    struct _hash_node* next;
+    struct _hash_node* prev;
+} HashNode;
 
-cache_node_t* create_cache_node(const char* key, const char* value) {
-    cache_node_t* n = malloc(sizeof(cache_node_t));
+HashNode* HashNode_create(char* key, char* val) {
+    HashNode* n = malloc(sizeof(HashNode));
+    n->key = malloc(sizeof(char) * (strlen(key) + 1));
+    n->val = malloc(sizeof(char) * (strlen(val) + 1));
 
-    n->key   = key;
-    n->value = value;
-    n->next  = NULL;
-    n->prev  = NULL;
+    strcpy(n->key, key);
+    strcpy(n->val, val);
+    n->next = NULL;
+    n->prev = NULL;
 
     return n;
 }
 
-void append_cache_node(cache_node_t* n1, cache_node_t* n2) {
+void HashNode_append(HashNode* n1, HashNode* n2) {
     if (n1->next != NULL) {
         printf("Error: key '%s' already have next item with key '%s'",
             n1->key, n1->next->key);
@@ -38,11 +41,19 @@ void append_cache_node(cache_node_t* n1, cache_node_t* n2) {
     n2->prev = n1;
 }
 
-void destroy_cache_node(cache_node_t* n) {
+void HashNode_update(HashNode* n, char* val) {
+    free(n->val);
+    n->val = malloc(sizeof(char) * (strlen(val) + 1));
+    strcpy(n->val, val);
+}
+
+void HashNode_destroy(HashNode* n) {
+    free(n->key);
+    free(n->val);
     free(n);
 }
 
-void remove_cache_node(cache_node_t* n) {
+void HashNode_remove(HashNode* n) {
     if (n->prev != NULL) {
         if (n->next != NULL) {
             n->prev->next = n->next;
@@ -61,13 +72,13 @@ void remove_cache_node(cache_node_t* n) {
         }
     }
 
-    destroy_cache_node(n);
+    HashNode_destroy(n);
 }
 
 // For testing purpose...
-void get_cache_node_keys(cache_node_t* n, const char** keys) {
+void HashNode_get_keys(HashNode* n, char** keys) {
     uint32_t i = 0;
-    cache_node_t* tmp_n = n;
+    HashNode* tmp_n = n;
 
     do {
         *(keys + i++) = tmp_n->key;
@@ -76,9 +87,9 @@ void get_cache_node_keys(cache_node_t* n, const char** keys) {
 }
 
 // For testing purpose...
-void get_cache_node_keys_reverse(cache_node_t* n, const char** keys) {
+void HashNode_get_keys_reverse(HashNode* n, char** keys) {
     uint32_t i = 0;
-    cache_node_t* tmp_n = n;
+    HashNode* tmp_n = n;
 
     do {
         *(keys + i++) = tmp_n->key;
