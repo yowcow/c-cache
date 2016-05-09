@@ -1,4 +1,4 @@
-.PHONY: test clean
+.PHONY: test test-valgrind clean
 
 BUILD=build
 RESOURCES=resources
