@@ -26,6 +26,8 @@ HashNode* Hash_set(Hash* h, char* key, char* val);
 
 HashNode* Hash_get(Hash* h, char* key);
 
+uint32_t Hash_key_size(Hash* h);
+
 bool Hash_delete(Hash* h, char* key);
 
 #ifdef __cplusplus

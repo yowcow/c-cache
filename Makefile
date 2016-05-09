@@ -29,30 +29,41 @@ $(BUILD)/hash.o:
 	$(CC) $(OPT) -c -I murmurhash.c hash.c \
 		-o $(BUILD)/hash.o
 
-test: all $(BUILD)/hash-node-test $(BUILD)/hash-bucket-test $(BUILD)/hash-test
+$(BUILD)/cache-fifo.o:
+	$(CC) $(OPT) -c cache-fifo.c \
+		-o $(BUILD)/cache-fifo.o
+
+test: all $(BUILD)/hash-node-test $(BUILD)/hash-bucket-test $(BUILD)/hash-test $(BUILD)/cache-fifo-test
 	./$(BUILD)/hash-node-test
 	./$(BUILD)/hash-bucket-test
 	./$(BUILD)/hash-test
+	./$(BUILD)/cache-fifo-test
 
-test-valgrind: all $(BUILD)/hash-node-test $(BUILD)/hash-bucket-test $(BUILD)/hash-test
+test-valgrind: all $(BUILD)/hash-node-test $(BUILD)/hash-bucket-test $(BUILD)/hash-test $(BUILD)/cache-fifo-test
 	valgrind ./$(BUILD)/hash-node-test
 	valgrind ./$(BUILD)/hash-bucket-test
 	valgrind ./$(BUILD)/hash-test
+	valgrind ./$(BUILD)/cache-fifo-test
 
 $(BUILD)/hash-node-test: $(BUILD)/hash-node.o
 	$(CC) $(OPT) \
 		$(BUILD)/hash-node.o \
 		hash-node-test.c -o $(BUILD)/hash-node-test
 
-$(BUILD)/hash-bucket-test: $(BUILD)/hash-bucket.o
+$(BUILD)/hash-bucket-test: $(BUILD)/hash-node.o $(BUILD)/hash-bucket.o
 	$(CC) $(OPT) \
 		$(BUILD)/hash-node.o $(BUILD)/hash-bucket.o \
 		hash-bucket-test.c -o $(BUILD)/hash-bucket-test
 
-$(BUILD)/hash-test: $(BUILD)/hash.o
+$(BUILD)/hash-test: $(BUILD)/hash-node.o $(BUILD)/hash-bucket.o $(BUILD)/hash.o
 	$(CC) $(OPT) -I murmurhash.c murmurhash.c/murmurhash.c \
 		$(BUILD)/hash-node.o $(BUILD)/hash-bucket.o $(BUILD)/hash.o \
 		hash-test.c -o $(BUILD)/hash-test
+
+$(BUILD)/cache-fifo-test: $(BUILD)/hash-node.o $(BUILD)/hash-bucket.o $(BUILD)/hash.o $(BUILD)/cache-fifo.o
+	$(CC) $(OPT) -I murmurhash.c murmurhash.c/murmurhash.c \
+		$(BUILD)/hash-node.o $(BUILD)/hash-bucket.o $(BUILD)/hash.o $(BUILD)/cache-fifo.o \
+		cache-fifo-test.c -o $(BUILD)/cache-fifo-test
 
 clean:
 	-rm -rf $(BUILD) $(RESOURCES)

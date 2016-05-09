@@ -44,6 +44,17 @@ HashNode* Hash_get(Hash* h, char* key) {
     return HashBucket_find_node(h->buckets[slot], key);
 }
 
+uint32_t Hash_key_size(Hash* h) {
+    uint32_t size = 0;
+    uint32_t i;
+
+    for (i = 0; i < HASH_BUCKET_COUNT; i++) {
+        size += h->buckets[i]->size;
+    }
+
+    return size;
+}
+
 bool Hash_delete(Hash* h, char* key) {
     uint32_t len = strlen(key);
     uint32_t slot = Hash_find_bucket_slot(key, len, h->seed);

@@ -11,6 +11,7 @@ void test_Hash_create() {
     Hash* h = Hash_create();
 
     assert(0 <= h->seed && h->seed < UINT32_MAX);
+    assert(Hash_key_size(h) == 0);
 
     for (uint32_t i = 0; i < HASH_BUCKET_COUNT; i++) {
         assert(h->buckets[i]->size == 0);
@@ -40,6 +41,11 @@ void test_Hash_set() {
     assert(h->buckets[slot]->size == 1);
     assert(strcmp(h->buckets[slot]->head->key, "key1") == 0);
     assert(strcmp(h->buckets[slot]->tail->key, "key1") == 0);
+    assert(Hash_key_size(h) == 1);
+
+    Hash_set(h, "key1", "value111");
+
+    assert(Hash_key_size(h) == 1);
 
     Hash_destroy(h);
 
@@ -59,6 +65,8 @@ void test_Hash_get() {
     Hash_set(h, "key3", "value3");
     Hash_set(h, "key4", "value4");
     Hash_set(h, "key5", "value5");
+
+    assert(Hash_key_size(h) == 5);
 
     for (uint32_t i = 1; i <= 5; i++) {
         char key[5];
