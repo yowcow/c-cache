@@ -5,14 +5,18 @@ unit module C_Hash;
 
 sub library { 'resources/libhash.so' }
 
-class C_Hash::Node is repr('CStruct') {
+class C_Hash::Pair is repr('CStruct') {
     has Pointer[Str] $.key;
     has Pointer[Str] $.val;
+}
+
+class C_Hash::Node is repr('CStruct') {
+    has C_Hash::Pair $.pair;
     has C_Hash::Node $.next;
     has C_Hash::Node $.prev;
 
-    method key(::?CLASS:D: --> Str) { $!key.deref }
-    method val(::?CLASS:D: --> Str) { $!val.deref }
+    method key(::?CLASS:D: --> Str) { $!pair.key.deref }
+    method val(::?CLASS:D: --> Str) { $!pair.val.deref }
 }
 
 class C_Hash::Bucket is repr('CStruct') {

@@ -26,40 +26,40 @@ void test_append_node_to_hash_bucket() {
         HashNode* n = HashBucket_append_node(b, "key1", "value1");
 
         assert(b->size == 1);
-        assert(strcmp(b->head->key, "key1") == 0);
-        assert(strcmp(b->tail->key, "key1") == 0);
-        assert(strcmp(n->key, b->tail->key) == 0);
+        assert(strcmp(b->head->pair->key, "key1") == 0);
+        assert(strcmp(b->tail->pair->key, "key1") == 0);
+        assert(strcmp(n->pair->key, b->tail->pair->key) == 0);
     }
 
     {
         HashNode* n = HashBucket_append_node(b, "key2", "value2");
 
         assert(b->size == 2);
-        assert(strcmp(b->head->key, "key1") == 0);
-        assert(strcmp(b->head->next->key, "key2") == 0);
-        assert(strcmp(b->tail->key, "key2") == 0);
-        assert(strcmp(b->tail->prev->key, "key1") == 0);
-        assert(strcmp(n->key, b->tail->key) == 0);
+        assert(strcmp(b->head->pair->key, "key1") == 0);
+        assert(strcmp(b->head->next->pair->key, "key2") == 0);
+        assert(strcmp(b->tail->pair->key, "key2") == 0);
+        assert(strcmp(b->tail->prev->pair->key, "key1") == 0);
+        assert(strcmp(n->pair->key, b->tail->pair->key) == 0);
     }
 
     {
         HashNode* n = HashBucket_append_node(b, "key3", "value3");
 
         assert(b->size == 3);
-        assert(strcmp(b->head->key, "key1") == 0);
-        assert(strcmp(b->head->next->key, "key2") == 0);
-        assert(strcmp(b->tail->key, "key3") == 0);
-        assert(strcmp(b->tail->prev->key, "key2") == 0);
-        assert(strcmp(n->key, b->tail->key) == 0);
+        assert(strcmp(b->head->pair->key, "key1") == 0);
+        assert(strcmp(b->head->next->pair->key, "key2") == 0);
+        assert(strcmp(b->tail->pair->key, "key3") == 0);
+        assert(strcmp(b->tail->prev->pair->key, "key2") == 0);
+        assert(strcmp(n->pair->key, b->tail->pair->key) == 0);
     }
 
     {
         HashNode* n = HashBucket_append_node(b, "key3", "value333");
 
         assert(b->size == 3);
-        assert(strcmp(b->tail->key, "key3") == 0);
-        assert(strcmp(b->tail->val, "value333") == 0); // Overwritten
-        assert(strcmp(n->val, b->tail->val) == 0);
+        assert(strcmp(b->tail->pair->key, "key3") == 0);
+        assert(strcmp(b->tail->pair->val, "value333") == 0); // Overwritten
+        assert(strcmp(n->pair->val, b->tail->pair->val) == 0);
     }
 
     HashBucket_destroy(b);
@@ -85,7 +85,7 @@ void test_find_node_in_hash_bucket() {
     {
         HashNode* n = HashBucket_find_node(b, "key3");
 
-        assert(strcmp(n->key, "key3") == 0);
+        assert(strcmp(n->pair->key, "key3") == 0);
     }
 
     {
@@ -118,24 +118,24 @@ void test_remove_node_in_hash_bucket() {
         // Make it: n1 -> n2 -> n4
         assert(HashBucket_remove_node(b, "n3") == true);
         assert(b->size == 3);
-        assert(strcmp(b->head->key, "n1") == 0);
-        assert(strcmp(b->tail->key, "n4") == 0);
+        assert(strcmp(b->head->pair->key, "n1") == 0);
+        assert(strcmp(b->tail->pair->key, "n4") == 0);
     }
 
     {
         // Make it: n1 -> n2
         assert(HashBucket_remove_node(b, "n4") == true);
         assert(b->size == 2);
-        assert(strcmp(b->head->key, "n1") == 0);
-        assert(strcmp(b->tail->key, "n2") == 0);
+        assert(strcmp(b->head->pair->key, "n1") == 0);
+        assert(strcmp(b->tail->pair->key, "n2") == 0);
     }
 
     {
         // Make it: n2
         assert(HashBucket_remove_node(b, "n1") == true);
         assert(b->size == 1);
-        assert(strcmp(b->head->key, "n2") == 0);
-        assert(strcmp(b->tail->key, "n2") == 0);
+        assert(strcmp(b->head->pair->key, "n2") == 0);
+        assert(strcmp(b->tail->pair->key, "n2") == 0);
     }
 
     {
