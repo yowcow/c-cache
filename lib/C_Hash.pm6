@@ -9,7 +9,7 @@ class C_Hash::Node is repr('CStruct') {
     has Pointer[Str] $.key;
     has Pointer[Str] $.val;
     has C_Hash::Node $.next;
-    has C_Hash::Node $.tail;
+    has C_Hash::Node $.prev;
 
     method key(::?CLASS:D: --> Str) { $!key.deref }
     method val(::?CLASS:D: --> Str) { $!val.deref }
