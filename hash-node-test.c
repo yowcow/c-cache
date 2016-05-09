@@ -8,8 +8,8 @@ void test_create_hash_node() {
 
     HashNode* n = HashNode_create("key", "value");
 
-    assert(strcmp(n->key, "key") == 0);
-    assert(strcmp(n->val, "value") == 0);
+    assert(strcmp(n->pair->key, "key") == 0);
+    assert(strcmp(n->pair->val, "value") == 0);
 
     HashNode_destroy(n);
 
@@ -23,7 +23,7 @@ void test_update_hash_node() {
 
     HashNode_update(n, "value123");
 
-    assert(strcmp(n->val, "value123") == 0);
+    assert(strcmp(n->pair->val, "value123") == 0);
 
     HashNode_destroy(n);
 
@@ -41,10 +41,10 @@ void test_append_hash_node() {
     HashNode_append(n2, n3);
 
     assert(n1->prev == NULL);
-    assert(strcmp(n1->next->key, n2->key) == 0);
-    assert(strcmp(n2->prev->key, n1->key) == 0);
-    assert(strcmp(n2->next->key, n3->key) == 0);
-    assert(strcmp(n3->prev->key, n2->key) == 0);
+    assert(strcmp(n1->next->pair->key, n2->pair->key) == 0);
+    assert(strcmp(n2->prev->pair->key, n1->pair->key) == 0);
+    assert(strcmp(n2->next->pair->key, n3->pair->key) == 0);
+    assert(strcmp(n3->prev->pair->key, n2->pair->key) == 0);
     assert(n3->next == NULL);
 
 

@@ -3,14 +3,13 @@
 #include <stdio.h>
 #include <string.h>
 #include "hash-node.h"
+#include "pair.h"
 
 HashNode* HashNode_create(char* key, char* val) {
     HashNode* n = malloc(sizeof(HashNode));
-    n->key = malloc(sizeof(char) * (strlen(key) + 1));
-    n->val = malloc(sizeof(char) * (strlen(val) + 1));
+    Pair* p = Pair_create(key, val);
 
-    strcpy(n->key, key);
-    strcpy(n->val, val);
+    n->pair = p;
     n->next = NULL;
     n->prev = NULL;
 
@@ -20,7 +19,7 @@ HashNode* HashNode_create(char* key, char* val) {
 void HashNode_append(HashNode* n1, HashNode* n2) {
     if (n1->next != NULL) {
         printf("Error: key '%s' already have next item with key '%s'",
-            n1->key, n1->next->key);
+            n1->pair->key, n1->next->pair->key);
         exit(1);
     }
 
@@ -29,14 +28,11 @@ void HashNode_append(HashNode* n1, HashNode* n2) {
 }
 
 void HashNode_update(HashNode* n, char* val) {
-    free(n->val);
-    n->val = malloc(sizeof(char) * (strlen(val) + 1));
-    strcpy(n->val, val);
+    Pair_update(n->pair, val);
 }
 
 void HashNode_destroy(HashNode* n) {
-    free(n->key);
-    free(n->val);
+    Pair_destroy(n->pair);
     free(n);
 }
 
@@ -68,7 +64,7 @@ void HashNode_get_keys(HashNode* n, char** keys) {
     HashNode* tmp_n = n;
 
     do {
-        *(keys + i++) = tmp_n->key;
+        *(keys + i++) = tmp_n->pair->key;
         tmp_n = tmp_n->next;
     } while (tmp_n != NULL);
 }
@@ -79,7 +75,7 @@ void HashNode_get_keys_reverse(HashNode* n, char** keys) {
     HashNode* tmp_n = n;
 
     do {
-        *(keys + i++) = tmp_n->key;
+        *(keys + i++) = tmp_n->pair->key;
         tmp_n = tmp_n->prev;
     } while (tmp_n != NULL);
 }

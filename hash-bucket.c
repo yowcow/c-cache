@@ -22,7 +22,7 @@ HashNode* HashBucket_find_node(HashBucket* b, char* key) {
     HashNode* tmp_n = b->head;
 
     do {
-        if (strcmp(tmp_n->key, key) == 0) {
+        if (strcmp(tmp_n->pair->key, key) == 0) {
             return tmp_n;
         }
         tmp_n = tmp_n->next;
@@ -69,12 +69,12 @@ bool HashBucket_remove_node(HashBucket* b, char* key) {
     }
 
     // Removing node is the head
-    if (strcmp(n->key, b->head->key) == 0) {
+    if (strcmp(n->pair->key, b->head->pair->key) == 0) {
         b->head = b->head->next;
     }
 
     // Removing node is the tail
-    if (strcmp(n->key, b->tail->key) == 0) {
+    if (strcmp(n->pair->key, b->tail->pair->key) == 0) {
         b->tail = b->tail->prev;
     }
 

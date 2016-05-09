@@ -35,11 +35,11 @@ void test_Hash_set() {
 
     uint32_t slot = Hash_find_bucket_slot("key1", 4, h->seed);
 
-    assert(strcmp(n->key, "key1") == 0);
-    assert(strcmp(n->val, "value1") == 0);
+    assert(strcmp(n->pair->key, "key1") == 0);
+    assert(strcmp(n->pair->val, "value1") == 0);
     assert(h->buckets[slot]->size == 1);
-    assert(strcmp(h->buckets[slot]->head->key, "key1") == 0);
-    assert(strcmp(h->buckets[slot]->tail->key, "key1") == 0);
+    assert(strcmp(h->buckets[slot]->head->pair->key, "key1") == 0);
+    assert(strcmp(h->buckets[slot]->tail->pair->key, "key1") == 0);
 
     Hash_destroy(h);
 
@@ -68,7 +68,7 @@ void test_Hash_get() {
 
         HashNode* n = Hash_get(h, key);
 
-        assert(strcmp(n->val, val) == 0);
+        assert(strcmp(n->pair->val, val) == 0);
     }
 
     Hash_destroy(h);

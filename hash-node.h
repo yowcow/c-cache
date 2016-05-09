@@ -5,9 +5,10 @@
 extern "C" {
 #endif
 
+#include "pair.h"
+
 typedef struct _hash_node {
-    char* key;
-    char* val;
+    Pair* pair;
     struct _hash_node* next;
     struct _hash_node* prev;
 } HashNode;
