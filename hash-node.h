@@ -5,29 +5,19 @@
 extern "C" {
 #endif
 
-#include "pair.h"
-
 typedef struct _hash_node {
-    Pair* pair;
+    void* data;
     struct _hash_node* next;
     struct _hash_node* prev;
 } HashNode;
 
-HashNode* HashNode_create(char* key, char* val);
+HashNode* HashNode_create(void* data);
 
 void HashNode_append(HashNode* n1, HashNode* n2);
 
-void HashNode_update(HashNode* n, char* val);
+void* HashNode_destroy(HashNode* n);
 
-void HashNode_destroy(HashNode* n);
-
-void HashNode_remove(HashNode* n);
-
-// For testing purpose...
-void HashNode_get_keys(HashNode* n, char** keys);
-
-// For testing purpose...
-void HashNode_get_keys_reverse(HashNode* n, char** keys);
+void* HashNode_remove(HashNode* n);
 
 #ifdef __cplusplus
 }
