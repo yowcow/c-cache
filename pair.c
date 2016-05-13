@@ -5,19 +5,15 @@
 Pair* Pair_create(char* key, char* val) {
     Pair* p = malloc(sizeof(Pair));
 
-    p->key = malloc(sizeof(char) * (strlen(key) + 1));
-    p->val = malloc(sizeof(char) * (strlen(val) + 1));
-
-    strcpy(p->key, key);
-    strcpy(p->val, val);
+    p->key = strdup(key);
+    p->val = strdup(val);
 
     return p;
 }
 
 void Pair_update(Pair* p, char* val) {
     free(p->val);
-    p->val = malloc(sizeof(char) * (strlen(val) + 1));
-    strcpy(p->val, val);
+    p->val = strdup(val);
 }
 
 void Pair_destroy(Pair* p) {
